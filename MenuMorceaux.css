@@ -2,14 +2,19 @@ body *
 {
     border: 1px solid black;
 }
+body
+{
+	background-color:rgb(221,221,221);
+}
 table
 {
     border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
 }
 .jour
 {
-	background-color: rgba(13,230,30,0.7);
+	background-color: rgb(90, 180, 50);
 	width: 100px;
+	color: white;
 }
 .case
 {
@@ -17,16 +22,25 @@ table
     align-items: center;
     flex-direction: line;
     justify-content: space-around;
-	min-width:5em;
-	border-radius : 50%;
+	border-radius : 10%;
+	min-height:10em;
 	
 }
 
+
+
 .case tr td
 {
-	border-radius : 50%;/*
-	min-width:5em;
-	min-height:100em;*/
+	min-width:10em;
+	height:6em;
+	text-align:center;
+	background-color:rgb(250,208,122);
+}
+
+.case tr .MidiSoir
+{
+	height:2em;
+	background-color:rgb(245, 172, 20);
 }
 
 .courses
@@ -34,7 +48,7 @@ table
     border: 2px solid rgb(47,153,224);
     border-radius: 10%;
     box-shadow: 1px 1px 1px rgb(47,153,224);
-    background-color: rgba(48, 219, 79,0.7);
+    background-color: rgba(179, 136, 103,0.7);
 }
 
 .HCT {
@@ -49,7 +63,7 @@ table
 	flex-direction: column;
     align-items: center;
 	
-	justify-content: space-around;
+	justify-content: space-between;
 }
 
 .zone_boutons {
@@ -67,7 +81,8 @@ table
 {
 	min-width: 70%;
 	min-height: 45em;
-	border-radius : 3%;
+	/*border-radius : 3%;*/
+	background-color:rgb(200,230,160);
 }
 
 #LigneJours
