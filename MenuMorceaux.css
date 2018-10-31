@@ -17,7 +17,18 @@ table
     align-items: center;
     flex-direction: line;
     justify-content: space-around;
+	min-width:5em;
+	border-radius : 50%;
+	
 }
+
+.case tr td
+{
+	border-radius : 50%;/*
+	min-width:5em;
+	min-height:100em;*/
+}
+
 .courses
 {
     border: 2px solid rgb(47,153,224);
@@ -39,14 +50,51 @@ table
     align-items: center;
 	
 	justify-content: space-around;
-	
 }
 
 .zone_boutons {
+	min-width:20%; 
 	
 }
 
 .zone_boutons * {
 	background:#ffd400;
 	border-radius : 10%;
+	margin:3%;
 }
+
+#MenuSemaine
+{
+	min-width: 70%;
+	min-height: 45em;
+	border-radius : 3%;
+}
+
+#LigneJours
+{
+	height:5em;
+	text-align:center;
+	font-family:  "Arial Black", Arial, Verdana, sans-serif;
+	font-size: 1.2em; 
+}
+
+#fleche
+{
+	
+}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
