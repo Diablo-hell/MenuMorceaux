@@ -1,0 +1,34 @@
+*
+{
+    border: 1px solid black;
+	text-align: center;
+}
+table
+{
+    border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
+}
+.jour
+{
+	background-color: rgba(13,230,30,0.7);
+	width: 100px;
+}
+.case
+{
+	display: flex;
+    align-items: center;
+    flex-direction: line;
+    justify-content: space-around;
+}
+.courses
+{
+    position:relative;
+    top:100px;
+    float: right;
+    height: 100px;
+    width: 50px;
+    margin: 20px;
+    border: 2px solid rgb(47,153,224);
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 1px 1px 1px rgb(47,153,224);
+    background-color: rgba(48, 219, 79,0.7);
+}
