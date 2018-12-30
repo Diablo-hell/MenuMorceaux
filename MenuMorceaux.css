@@ -1,45 +1,113 @@
 body *
 {
-    border: 1px solid black;
+    /* border: 1px solid black; */
+	/* max-height : 100%; */
+	/* max-width : 100%; */
+	/* min-height : fit-content; */
+	/* min-width : fit-content; */
+	
 }
 body
 {
 	background-color:rgb(221,221,221);
+	position: relative;
 }
-table
-{
-    border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
+
+body .headDiv {
+	border-width : 1px 1px 0 1px;
+	border-color: black;
+	border-style: solid;
+	padding : 2px;
+	border-radius : 3px 3px 0 0;
 }
-.jour
-{
-	background-color: rgb(90, 180, 50);
-	width: 100px;
-	color: white;
+
+#sectionMenu{
+	border : 1px solid black;
 }
-.case
+
+body>div:first-child
 {
-	display: flex;
-    align-items: center;
-    flex-direction: line;
-    justify-content: space-around;
-	border-radius : 10%;
-	min-height:10em;
+	padding : 2px;
+	width : fit-content;
+	border : 2px solid green;
 	
 }
 
-
-
-.case tr td
-{
-	min-width:10em;
-	height:6em;
-	text-align:center;
-	background-color:rgb(250,208,122);
+.quittButton{
+	width: 1.2rem;
+	height: 1.2rem;
+	border-radius : 100%;
+	background: #8c9e8d;
+	border: 2px solid #222b22;
+	justify : center;
+	align-items : center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
-.case tr .MidiSoir
+#DivMenuSemaine
 {
-	height:2em;
+	/*border-radius : 3%;*/
+	background-color:rgb(200,230,160);
+}
+
+#TabMenuSemaine
+{
+}
+
+#LigneJours
+{
+	height:5rem;
+	font-family:  "Arial Black", Arial, Verdana, sans-serif;
+	font-size: 1.2rem; 
+}
+.ColJour {
+    border: 1px solid black;
+	border-collapse: collapse;
+	min-height:500px;
+	margin : 7px;
+	padding : 2px;
+	flex : 1;
+}
+
+.ColJour >*
+{
+	flex : 1;
+	margin : 1px;
+}
+
+.jour
+{
+	background-color: rgb(90, 180, 50);
+	max-height: 2rem;
+	width: 95%;
+	color: white;
+}
+
+
+.ConteneurMidiSoir
+{
+    border: 1px solid black;
+	min-width:100%;
+}
+
+.notes{
+	/* padding : 1rem; */
+	border-radius : 8px;
+	border : 1px solid #282113;
+}
+
+.MidiSoir,.notes,.repas
+{
+	background-color:rgb(250,208,122);
+	//min-height:50px;
+	min-width:90%;
+}
+
+.MidiSoir
+{
 	background-color:rgb(245, 172, 20);
 }
 
@@ -51,19 +119,9 @@ table
     background-color: rgba(179, 136, 103,0.7);
 }
 
-.HCT {
-	display: flex;
-	flex-direction: row;
-    align-items: center;
-	justify-content: space-around;
-}
-
-.VCC {
-	display: flex;
-	flex-direction: column;
-    align-items: center;
+#fleche
+{
 	
-	justify-content: space-between;
 }
 
 .zone_boutons {
@@ -77,39 +135,79 @@ table
 	margin:3%;
 }
 
-#MenuSemaine
-{
-	min-width: 70%;
-	min-height: 45em;
-	/*border-radius : 3%;*/
-	background-color:rgb(200,230,160);
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  background : red;
 }
 
-#LigneJours
-{
-	height:5em;
-	text-align:center;
-	font-family:  "Arial Black", Arial, Verdana, sans-serif;
-	font-size: 1.2em; 
+/* flex classes */
+/* 	formed as : direction -	justification -	alignment
+				r: row
+				c: column
+							s: start
+							e: end
+							c: center
+							b: space-between
+							a: space-around
+							v: space-eVenly
+											s: start
+											e: end
+											c: center
+											t: sTretch
+*/
+
+.flexFill {
+	flex : 1;
 }
 
-#fleche
-{
-	
-}
-	
+.rss{	display: flex;	flex-direction: row;	justify-content: start;			align-items: start;}
+.rse{	display: flex;	flex-direction: row;	justify-content: start;			align-items: end;}
+.rsc{	display: flex;	flex-direction: row;	justify-content: start;			align-items: center;}
+.rst{	display: flex;	flex-direction: row;	justify-content: start;			align-items: stretch;}
+.res{	display: flex;	flex-direction: row;	justify-content: end;			align-items: start;}
+.ree{	display: flex;	flex-direction: row;	justify-content: end;			align-items: end;}
+.rec{	display: flex;	flex-direction: row;	justify-content: end;			align-items: center;}
+.ret{	display: flex;	flex-direction: row;	justify-content: end;			align-items: stretch;}
+.rcs{	display: flex;	flex-direction: row;	justify-content: center;		align-items: start;}
+.rce{	display: flex;	flex-direction: row;	justify-content: center;		align-items: end;}
+.rcc{	display: flex;	flex-direction: row;	justify-content: center;		align-items: center;}
+.rct{	display: flex;	flex-direction: row;	justify-content: center;		align-items: stretch;}
+.rbs{	display: flex;	flex-direction: row;	justify-content: space-between;	align-items: start;}
+.rbe{	display: flex;	flex-direction: row;	justify-content: space-between;	align-items: end;}
+.rbc{	display: flex;	flex-direction: row;	justify-content: space-between;	align-items: center;}
+.rbt{	display: flex;	flex-direction: row;	justify-content: space-between;	align-items: stretch;}
+.ras{	display: flex;	flex-direction: row;	justify-content: space-around;	align-items: start;}
+.rae{	display: flex;	flex-direction: row;	justify-content: space-around;	align-items: end;}
+.rac{	display: flex;	flex-direction: row;	justify-content: space-around;	align-items: center;}
+.rat{	display: flex;	flex-direction: row;	justify-content: space-around;	align-items: stretch;}
+.rvs{	display: flex;	flex-direction: row;	justify-content: space-evenly;	align-items: start;}
+.rve{	display: flex;	flex-direction: row;	justify-content: space-evenly;	align-items: end;}
+.rvc{	display: flex;	flex-direction: row;	justify-content: space-evenly;	align-items: center;}
+.rvt{	display: flex;	flex-direction: row;	justify-content: space-evenly;	align-items: stretch;}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+.css{	display: flex;	flex-direction: column;	justify-content: start;			align-items: start;}
+.cse{	display: flex;	flex-direction: column;	justify-content: start;			align-items: end;}
+.csc{	display: flex;	flex-direction: column;	justify-content: start;			align-items: center;}
+.cst{	display: flex;	flex-direction: column;	justify-content: start;			align-items: stretch;}
+.ces{	display: flex;	flex-direction: column;	justify-content: end;			align-items: start;}
+.cee{	display: flex;	flex-direction: column;	justify-content: end;			align-items: end;}
+.cec{	display: flex;	flex-direction: column;	justify-content: end;			align-items: center;}
+.cet{	display: flex;	flex-direction: column;	justify-content: end;			align-items: stretch;}
+.ccs{	display: flex;	flex-direction: column;	justify-content: center;		align-items: start;}
+.cce{	display: flex;	flex-direction: column;	justify-content: center;		align-items: end;}
+.ccc{	display: flex;	flex-direction: column;	justify-content: center;		align-items: center;}
+.cct{	display: flex;	flex-direction: column;	justify-content: center;		align-items: stretch;}
+.cbs{	display: flex;	flex-direction: column;	justify-content: space-between;	align-items: start;}
+.cbe{	display: flex;	flex-direction: column;	justify-content: space-between;	align-items: end;}
+.cbc{	display: flex;	flex-direction: column;	justify-content: space-between;	align-items: center;}
+.cbt{	display: flex;	flex-direction: column;	justify-content: space-between;	align-items: stretch;}
+.cas{	display: flex;	flex-direction: column;	justify-content: space-around;	align-items: start;}
+.cae{	display: flex;	flex-direction: column;	justify-content: space-around;	align-items: end;}
+.cac{	display: flex;	flex-direction: column;	justify-content: space-around;	align-items: center;}
+.cat{	display: flex;	flex-direction: column;	justify-content: space-around;	align-items: stretch;}
+.cvs{	display: flex;	flex-direction: column;	justify-content: space-evenly;	align-items: start;}
+.cve{	display: flex;	flex-direction: column;	justify-content: space-evenly;	align-items: end;}
+.cvc{	display: flex;	flex-direction: column;	justify-content: space-evenly;	align-items: center;}
+.cvt{	display: flex;	flex-direction: column;	justify-content: space-evenly;	align-items: stretch;}
