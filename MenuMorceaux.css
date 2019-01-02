@@ -13,16 +13,21 @@ body
 	position: relative;
 }
 
-body .headDiv {
+body #headBar {
 	border-width : 1px 1px 0 1px;
 	border-color: black;
 	border-style: solid;
-	padding : 2px;
-	border-radius : 3px 3px 0 0;
+	padding : 3px;
+	border-radius : 5px 5px 0 0;
 }
 
 #sectionMenu{
 	border : 1px solid black;
+}
+
+#sectionMenu>*
+{
+	flex: 1;
 }
 
 body>div:first-child
@@ -53,8 +58,10 @@ body>div:first-child
 	background-color:rgb(200,230,160);
 }
 
-#TabMenuSemaine
+#TabMenuSemaine> div
 {
+	flex-grow: 1;
+    flex-basis: 100%;
 }
 
 #LigneJours
@@ -126,12 +133,13 @@ body>div:first-child
 
 .zone_boutons {
 	min-width:20%; 
+	max-width: max-content;
 	
 }
 
 .zone_boutons * {
 	background:#ffd400;
-	border-radius : 10%;
+	border-radius : 10px;
 	margin:3%;
 }
 
