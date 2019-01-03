@@ -12,12 +12,12 @@
 		</br>
 		<div>
 			<div id="headBar" class = "rbt">
-				<div id="titreMenu"> Menu de la semaine </div>
-				<div id="titrePlats"> Menu de la semaine </div>
-				<div id="titreCourses"> Menu de la semaine </div>
-				<button id="mainQuittButton" class="quittButton"> &times </button>
+				<div id="titreMenu" class="menuObj"> Menu de la semaine </div>
+				<div id="titrePlats" class="platsObj"> Plats Favoris </div>
+				<div id="titreCourses" class="coursesObj"> Plats Favoris </div>
+				<button id="mainQuittButton" class="quittButton platsObj coursesObj"> &times </button>
 			</div>
-			<section id="sectionMenu" class="rac flexFill">
+			<section id="sectionMenu" class="rac flexFill menuObj">
 				<div class="cct" id="DivMenuSemaine">
 					<div id="TabMenuSemaine" class="rac">
 					<!-- jours remplis automatiquement par le code javascript -->
@@ -31,7 +31,7 @@
 				
 				<div class="zone_boutons">
 					<div id="boutonFavoris">
-						<div id="platsFavorisBtn" class="ccc">
+						<div class="ccc">
 							<div>Plats favoris</div>
 							<div>...</div>
 						</div>
@@ -44,9 +44,16 @@
 					</div>
 				</div>
 			</section>
-		</div>
 			
-		<div class="popup"> toto </div>
+			<section id="sectionPlats" class="cac flexFill platsObj">
+				<div> du gratin de limace va être ajouté au jour sélectionné!</div>
+				<button id="platsOkButton"> OK </button>
+			</section>
+			
+			<section id="listeCourses" class="rac flexFill coursesObj">
+				
+			</section>
+		</div>
 	</body>
 	<script src="http://code.jquery.com/jquery.js"></script>
 	<script type="text/javascript" src="MenuMorceaux.js"></script>

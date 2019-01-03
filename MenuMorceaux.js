@@ -16,6 +16,7 @@ $("#headBar #titreMenu").show();
 $("#headBar #titrePlats").hide();
 $("#headBar #titreCourses").hide();
 $("#headBar #mainQuittButton").hide();
+$("#sectionPlats").hide();
 
 for(u=0;u<7;u++)
 {
@@ -48,8 +49,8 @@ $("*").click(function(evt){
 })
 
 /* callback click dans les cases conteneurMidiSoir */
-$(".ConteneurMidiSoir").prop("onclick", null).off("click");
-$(".ConteneurMidiSoir *").prop("onclick", null).off("click");
+$(".ConteneurMidiSoir").unbind("click");
+$(".ConteneurMidiSoir *").unbind("click");
 $(".ConteneurMidiSoir").click(function(evt){
 	evt.stopPropagation();
 	$(last_select).css("border-width","");
@@ -63,17 +64,59 @@ $(".ConteneurMidiSoir").click(function(evt){
 	$(this).css("border-radius","8px");
 	
 	console.log("click vu");
+	
+	if($(last_select).attr("id")=="boutonFavoris")
+	{
+		selectionPlat(this);
+	}
+	
 	last_select=this;
 })
 
 
 /* callback click dans les cases conteneurMidiSoir */
-$("#boutonFavoris #platsFavorisBtn").prop("onclick", null).off("click");
-$("#boutonFavoris #platsFavorisBtn *").prop("onclick", null).off("click");
-$("#boutonFavoris #platsFavorisBtn").click(function(evt){
-	$(last_select).find(".repasMidiSoir").append("gratin de limaces");
+$("#boutonFavoris").prop("onclick", null).off("click");
+$("#boutonFavoris *").prop("onclick", null).off("click");
+$("#boutonFavoris").click(function(evt){
+	evt.stopPropagation();
+	if($(last_select).hasClass("ConteneurMidiSoir") )
+	{
+		selectionPlat(last_select);
+	}
+	else
+	{
+		$(this).css("border-width","3px");
+		$(this).css("border-color","orange");
+		$(this).css("border-style","solid");
+		last_select=this;
+	}
 })
 
+selectionPlat=function(elt)
+{
+	showTabclass(".platsObj");
+	
+	$("#platsOkButton").unbind("click");
+	$("#platsOkButton").click(function(){
+		showTabclass(".menuObj");
+		$(elt).find(".repasMidiSoir").append("gratin de limaces</br>");
+	})
+	
+	$("#mainQuittButton").unbind("click");
+	$("#mainQuittButton").click(function(){
+		showTabclass(".menuObj");
+	})
+	
+}
+
+showTabclass = function(tab)
+{
+		$(".menuObj").hide();
+		$(".platsObj").hide();
+		$(".coursesObj").hide();
+		
+		$(tab).show();
+}
 /* Generation des classes flex */
 
 /*
