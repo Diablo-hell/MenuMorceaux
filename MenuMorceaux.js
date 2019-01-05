@@ -16,20 +16,19 @@ $("#headBar #titreMenu").show();
 $("#headBar #titrePlats").hide();
 $("#headBar #titreCourses").hide();
 $("#headBar #mainQuittButton").hide();
-$("#sectionPlats").hide();
 
 for(u=0;u<7;u++)
 {
 	$("#TabMenuSemaine").append(''+
 						'<div id="Col' + jours[u] + '" class="ccc ColJour">'+
 							'<div class="jour ccc">' + jours[u] + '</div>'+
-							'<div class="ConteneurMidiSoir">'+
+							'<div class="ConteneurMidiSoir cet">'+
 								'<div class="MidiSoir">Midi</div>'+
-								'<div class="repasMidiSoir"></div>'+
+								'<div class="repasMidiSoir ccc"></div>'+
 							'</div>'+
-							'<div class="ConteneurMidiSoir">'+
+							'<div class="ConteneurMidiSoir cet">'+
 								'<div class="MidiSoir">Soir</div>'+
-								'<div class="repasMidiSoir"></div>'+
+								'<div class="repasMidiSoir ccc"></div>'+
 							'</div>'+
 							'<div class="notes"><p>notes</p></div>'+
 						'</div>');
@@ -96,10 +95,36 @@ selectionPlat=function(elt)
 {
 	showTabclass(".platsObj");
 	
+	/* callback click sur les plats */
+	$("#listePlatsFavoris  .plat").unbind("click");
+	$("#listePlatsFavoris  .plat *").unbind("click");
+	$("#listePlatsFavoris  .plat").click(function(evt){
+		evt.stopPropagation();
+		try{
+			$(last_select).css("border-width","");
+			$(last_select).css("border-color","");
+			$(last_select).css("border-style","");
+			$(last_select).css("border-radius","");
+		}catch(e){}
+		
+		$(this).css("border-width","3px");
+		$(this).css("border-color","orange");
+		$(this).css("border-style","solid");
+		$(this).css("border-radius","8px");
+		
+		last_select=this;
+	})
+	
 	$("#platsOkButton").unbind("click");
 	$("#platsOkButton").click(function(){
-		showTabclass(".menuObj");
-		$(elt).find(".repasMidiSoir").append("gratin de limaces</br>");
+		if(last_select!=null)
+		if($(last_select).hasClass("plat"))
+		{
+			showTabclass(".menuObj");
+			$(elt).find(".repasMidiSoir").append(''+
+													$(last_select).find("th:nth-child(2)").html()+
+													$(last_select).find("th:first-child").html());
+		}
 	})
 	
 	$("#mainQuittButton").unbind("click");
@@ -117,6 +142,7 @@ showTabclass = function(tab)
 		
 		$(tab).show();
 }
+showTabclass(".menuObj");
 /* Generation des classes flex */
 
 /*
