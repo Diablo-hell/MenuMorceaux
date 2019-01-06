@@ -1,5 +1,7 @@
 body *
 {
+	box-sizing:border-box;
+	font-size: 0.8rem;
     /* border: 1px solid black; */
 	/* max-height : 100%; */
 	/* max-width : 100%; */
@@ -56,8 +58,6 @@ body>div:first-child
 	border-radius : 100%;
 	background: #8c9e8d;
 	border: 2px solid #222b22;
-	justify : center;
-	align-items : center;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -72,8 +72,6 @@ body>div:first-child
 
 #TabMenuSemaine> div
 {
-	flex-grow: 1;
-    flex-basis: 100%;
 }
 
 #LigneJours
@@ -85,7 +83,7 @@ body>div:first-child
 .ColJour {
     border: 1px solid black;
 	border-collapse: collapse;
-	min-height:500px;
+	min-height:34em;
 	margin : 7px;
 	padding : 2px;
 	flex : 1;
@@ -101,8 +99,9 @@ body>div:first-child
 
 .jour
 {
+	text-align: center;
 	background-color: rgb(90, 180, 50);
-	max-height: 2rem;
+	max-height: 2.5rem;
 	width: 100%;
 	color: white;
 }
@@ -126,16 +125,18 @@ body>div:first-child
 }
 
 .notes{
-	/* padding : 1rem; */
 	border-radius : 8px;
+	padding :8px;
 	border : 1px solid #282113;
+	text-align : left;
+	resize:none;
 }
 
 .MidiSoir,.notes,.repas
 {
 	background-color:rgb(250,208,122);
-	//min-height:50px;
-	min-width:90%;
+	width:100%;
+	max-width : 100%;
 }
 
 .MidiSoir
@@ -178,7 +179,7 @@ body>div:first-child
     height: auto;
 }
 
-#listePlatsFavoris
+#sectionPlats > *
 {
 	width : 100%;
 }
@@ -224,6 +225,8 @@ body>div:first-child
 											e: flex-end
 											c: center
 											t: sTretch
+											
+	on justifie sur la directoin spécifiée et on aligne sur l'autre.
 */
 
 .flexFill {

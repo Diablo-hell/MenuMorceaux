@@ -1,4 +1,5 @@
-
+/* ********************************************** */
+/* *************** Initialisation *************** */
 var calendrier=[];	
 
 calendrier["01-11-18"] = {};
@@ -17,11 +18,14 @@ $("#headBar #titrePlats").hide();
 $("#headBar #titreCourses").hide();
 $("#headBar #mainQuittButton").hide();
 
+date="7 Juillet";
+
+// ajout des 7 jours de la semaine dans le visuel du menu.
 for(u=0;u<7;u++)
 {
 	$("#TabMenuSemaine").append(''+
 						'<div id="Col' + jours[u] + '" class="ccc ColJour">'+
-							'<div class="jour ccc">' + jours[u] + '</div>'+
+							'<div class="jour ccc">' + jours[u] + ' </br> ' + date + '</div>'+
 							'<div class="ConteneurMidiSoir cet">'+
 								'<div class="MidiSoir">Midi</div>'+
 								'<div class="repasMidiSoir ccc"></div>'+
@@ -30,10 +34,11 @@ for(u=0;u<7;u++)
 								'<div class="MidiSoir">Soir</div>'+
 								'<div class="repasMidiSoir ccc"></div>'+
 							'</div>'+
-							'<div class="notes"><p>notes</p></div>'+
+							'<textarea class="notes" placeholder="notes..."></textarea>'+
 						'</div>');
 }
 
+// évènement de click par défaut => un élément sans effet déselectionne le dernier élément.
 last_select=null
 $("*").click(function(evt){
 	evt.stopPropagation();
@@ -46,6 +51,23 @@ $("*").click(function(evt){
 	last_select=null
 	
 })
+
+//sélection de la section à afficher
+showTabclass = function(tab)
+{
+		$(".menuObj").hide();
+		$(".platsObj").hide();
+		$(".coursesObj").hide();
+		
+		$(tab).show();
+}
+showTabclass(".menuObj");
+/* *************** Fin Initialisation *************** */
+/* ************************************************** */
+
+
+/* ******************************************** */
+/* *************** Section Menu *************** */
 
 /* callback click dans les cases conteneurMidiSoir */
 $(".ConteneurMidiSoir").unbind("click");
@@ -64,7 +86,7 @@ $(".ConteneurMidiSoir").click(function(evt){
 	
 	console.log("click vu");
 	
-	if($(last_select).attr("id")=="boutonFavoris")
+	if($(last_select).attr("id")=="boutonAjoutPlat")
 	{
 		selectionPlat(this);
 	}
@@ -73,10 +95,10 @@ $(".ConteneurMidiSoir").click(function(evt){
 })
 
 
-/* callback click dans les cases conteneurMidiSoir */
-$("#boutonFavoris").prop("onclick", null).off("click");
-$("#boutonFavoris *").prop("onclick", null).off("click");
-$("#boutonFavoris").click(function(evt){
+/* callback click sur ajoutde plats */
+$("#boutonAjoutPlat").prop("onclick", null).off("click");
+$("#boutonAjoutPlat *").prop("onclick", null).off("click");
+$("#boutonAjoutPlat").click(function(evt){
 	evt.stopPropagation();
 	if($(last_select).hasClass("ConteneurMidiSoir") )
 	{
@@ -90,9 +112,14 @@ $("#boutonFavoris").click(function(evt){
 		last_select=this;
 	}
 })
+/* *************** Fin Section Menu *************** */
+/* ************************************************ */
 
+
+/* ********************************************************** */
+/* *************** Section sélection de Plats *************** */
 selectionPlat=function(elt)
-{
+{// on reconstruit à chaque fois les calbacks pour que le plat choisi soit bien envoyé dans le jour demandé.
 	showTabclass(".platsObj");
 	
 	/* callback click sur les plats */
@@ -114,6 +141,10 @@ selectionPlat=function(elt)
 		
 		last_select=this;
 	})
+	$("#listePlatsFavoris  .plat").dblclick(function(evt){
+		evt.stopPropagation();
+		$("#platsOkButton").trigger("click");
+	})
 	
 	$("#platsOkButton").unbind("click");
 	$("#platsOkButton").click(function(){
@@ -133,22 +164,14 @@ selectionPlat=function(elt)
 	})
 	
 }
+/* *************** Fin Section sélection de Plats *************** */
+/* ************************************************************** */
 
-showTabclass = function(tab)
-{
-		$(".menuObj").hide();
-		$(".platsObj").hide();
-		$(".coursesObj").hide();
-		
-		$(tab).show();
-}
-showTabclass(".menuObj");
 /* Generation des classes flex */
-
 /*
 dir=[["r","c"],["row","column"]];
 justify=[["s","e","c","b","a","v"],["start","end","center","space-between","space-around","space-evenly"]];
-align=[["s","e","c","t"],["start","end","center","stretch"]];
+align=[["s","e","c","t"],["flex-start","flex-end","center","stretch"]];
 for(u=0;u<2;u++)
 	for(v=0;v<6;v++)
 		for(w=0;w<4;w++)
