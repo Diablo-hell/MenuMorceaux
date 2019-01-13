@@ -28,11 +28,21 @@ for(u=0;u<7;u++)
 							'<div class="jour ccc">' + jours[u] + ' </br> ' + date + '</div>'+
 							'<div class="ConteneurMidiSoir cet">'+
 								'<div class="MidiSoir">Midi</div>'+
-								'<div class="repasMidiSoir ccc"></div>'+
+								'<div class="repasMidiSoir ccc">'+
+									'<div class="rbc" ></div>'+
+									'<div class="ccc addPlatDiv">'+
+										'<button class="addPlatBtn"> + </button>'+
+									'</div>'+
+								'</div>'+
 							'</div>'+
 							'<div class="ConteneurMidiSoir cet">'+
 								'<div class="MidiSoir">Soir</div>'+
-								'<div class="repasMidiSoir ccc"></div>'+
+								'<div class="repasMidiSoir ccc">'+
+									'<div class="rbc" ></div>'+
+									'<div class="ccc addPlatDiv">'+
+										'<button class="addPlatBtn"> + </button>'+
+									'</div>'+
+								'</div>'+
 							'</div>'+
 							'<textarea class="notes" placeholder="notes..."></textarea>'+
 						'</div>');
@@ -47,8 +57,7 @@ $("*").click(function(evt){
 	$(last_select).css("border-color","");
 	$(last_select).css("border-style","");
 	$(last_select).css("border-radius","");
-	console.log("default click vu");
-	last_select=null
+	last_select=null;
 	
 })
 
@@ -88,22 +97,39 @@ $(".ConteneurMidiSoir").click(function(evt){
 	
 	if($(last_select).attr("id")=="boutonAjoutPlat")
 	{
-		selectionPlat(this);
+		selectionPlat($(this).find(".repasMidiSoir > div:first-child()"));
 	}
 	
 	last_select=this;
 })
 
+// affichage du bouton "+" lorsuqu'on passe au dessus d'un jour de la semaine avec un plat
+$(".ConteneurMidiSoir").hover(
+	function(evt){ // hover IN function
+		if($(this).attr("plein")== null)
+			{ $(this).find(".addPlatBtn").show(); }
+	},
+	function(evt){ // hover OUT function
+		$(this).find(".addPlatBtn").hide();
+	})
+// boutons "+" cachés par défaut
+$(".addPlatBtn").hide();
 
-/* callback click sur ajoutde plats */
+// affichage de la sélection de plats sur appui sur "+"
+$(".repasMidiSoir .addPlatBtn").click(function(evt){ // hover IN function
+	selectionPlat($(this).parents(".repasMidiSoir").find("div:first-child"));
+})
+
+
+// callback click sur ajoutde plats 
 $("#boutonAjoutPlat").prop("onclick", null).off("click");
 $("#boutonAjoutPlat *").prop("onclick", null).off("click");
 $("#boutonAjoutPlat").click(function(evt){
 	evt.stopPropagation();
 	if($(last_select).hasClass("ConteneurMidiSoir") )
 	{
-		selectionPlat(last_select);
-	}
+		selectionPlat($(last_select).find(".repasMidiSoir > div:first-child()"));
+	} 
 	else
 	{
 		$(this).css("border-width","3px");
@@ -112,6 +138,23 @@ $("#boutonAjoutPlat").click(function(evt){
 		last_select=this;
 	}
 })
+
+platHoverInHandler = 
+	function(evt){ // hover IN function
+		evt.stopPropagation();
+		$(this).find(".removePlatBtn").show();
+	};
+platHoverOutHandler = 
+	function(evt){ // hover OUT function
+		evt.stopPropagation();
+		$(this).find(".removePlatBtn").hide();
+	};
+	
+removePlatBtnClickHandler = 
+	function(evt){ // hover OUT function
+		evt.stopPropagation();
+		$(this).parents(".plat").remove();
+	};
 /* *************** Fin Section Menu *************** */
 /* ************************************************ */
 
@@ -123,9 +166,9 @@ selectionPlat=function(elt)
 	showTabclass(".platsObj");
 	
 	/* callback click sur les plats */
-	$("#listePlatsFavoris  .plat").unbind("click");
-	$("#listePlatsFavoris  .plat *").unbind("click");
-	$("#listePlatsFavoris  .plat").click(function(evt){
+	$("#listePlatsFavoris  .platSelect").unbind("click");
+	$("#listePlatsFavoris  .platSelect *").unbind("click");
+	$("#listePlatsFavoris  .platSelect").click(function(evt){
 		evt.stopPropagation();
 		try{
 			$(last_select).css("border-width","");
@@ -141,7 +184,7 @@ selectionPlat=function(elt)
 		
 		last_select=this;
 	})
-	$("#listePlatsFavoris  .plat").dblclick(function(evt){
+	$("#listePlatsFavoris  .platSelect").dblclick(function(evt){
 		evt.stopPropagation();
 		$("#platsOkButton").trigger("click");
 	})
@@ -149,12 +192,17 @@ selectionPlat=function(elt)
 	$("#platsOkButton").unbind("click");
 	$("#platsOkButton").click(function(){
 		if(last_select!=null)
-		if($(last_select).hasClass("plat"))
+		if($(last_select).hasClass("platSelect"))
 		{
 			showTabclass(".menuObj");
-			$(elt).find(".repasMidiSoir").append(''+
-													$(last_select).find("th:nth-child(2)").html()+
-													$(last_select).find("th:first-child").html());
+			$(elt).append('<div class="plat">'+
+							$(last_select).find("th:nth-child(2)").html()+
+							$(last_select).find("th:first-child").html()+
+							'<button class="removePlatBtn"> &times </button>'+
+						'</div>');
+			$(elt).find(".removePlatBtn").hide();
+			$(".plat").hover(platHoverInHandler , platHoverOutHandler);
+			$(".removePlatBtn").click(removePlatBtnClickHandler);
 		}
 	})
 	

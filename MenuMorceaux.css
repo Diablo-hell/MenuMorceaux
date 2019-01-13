@@ -83,7 +83,7 @@ body>div:first-child
 .ColJour {
     border: 1px solid black;
 	border-collapse: collapse;
-	min-height:34em;
+	min-height:39em;
 	margin : 7px;
 	padding : 2px;
 	flex : 1;
@@ -122,6 +122,52 @@ body>div:first-child
 .repasMidiSoir img{
 	width: 60%;
     height: auto;
+}
+
+.repasMidiSoir>div:first-child {
+	width: 100%;
+	flex : 1;
+	padding : 1px;
+}
+
+.addPlatDiv {
+	height : 1.2rem;
+	width : 100%;
+	margin : 0.2rem;
+}
+
+.addPlatBtn {
+	width: 1.2rem;
+	height: 100%;
+	border-radius : 100%;
+	background-color:rgb(245, 172, 20);
+	border: 2px solid #222b22;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.plat {
+	max-height : 100%;
+	max-width : 100%;
+	position : relative;
+}
+
+.removePlatBtn {
+	height : 1.2rem;
+	width: 1.2rem;
+	border-radius : 100%;
+	background-color: #5ab432;
+	border: 2px solid red;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+    position: absolute;
+	bottom : 0.2rem;
+	right : 0.2rem;
 }
 
 .notes{
@@ -184,20 +230,21 @@ body>div:first-child
 	width : 100%;
 }
 
-#listePlatsFavoris  .plat
+#listePlatsFavoris  .platSelect
 {
 	width : 100%;
 	border : 1px solid black;
 	margin : 0.2em 0 0.2em 0 ;
 }
 
-#listePlatsFavoris  .plat> th
+#listePlatsFavoris  .platSelect> th
 {
 	margin : 1em 2em 1em 2em;
 	font-size : 1.4rem;
+	user-select: none; /* Standard */
 }
 
-#listePlatsFavoris  .plat > th:first-child
+#listePlatsFavoris  .platSelect > th:first-child
 {
 	margin : 1em 2em 1em 2em;
 	font-size : 1rem;

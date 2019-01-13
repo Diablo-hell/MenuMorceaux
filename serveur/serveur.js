@@ -32,13 +32,22 @@ app.get('/:sourceFile', function(req, res) {
 	var extension=RegExp.$1;
 	console.log("demande du fichier " + req.params.sourceFile + " dont l'extension est " + extension);
 	
+	
 	fs.readFile('./../'+req.params.sourceFile, function(err, data) {
 		if (err){
-			throw err;
+			//throw err;
+			//console.log(err);
+			console.log("fichier inexistant: " + './../'+req.params.sourceFile);
+			res.setHeader('Content-Type', 'text/plain');
+			res.write('fichier introuvable');
+			res.end();
 		}
-		res.setHeader('Content-Type', 'text/'+extension);
-		res.write(data);
-		res.end();
+		else
+		{
+			res.setHeader('Content-Type', 'text/'+extension);
+			res.write(data);
+			res.end();
+		}
 	});
 	
 });
@@ -57,6 +66,7 @@ app.get('/plats/:imgPlat', function(req, res) {
 	fs.readFile('./../plats/'+req.params.imgPlat, function(err, data) {
 		if (err){
 			//throw err;
+			//console.log(err);
 			console.log("fichier inexistant: " + './../'+req.params.imgPlat);
 			res.setHeader('Content-Type', 'text/plain');
 			res.write('fichier introuvable');
@@ -88,5 +98,5 @@ app.use(function(req, res, next){
 
 
 // start listening !
-app.listen(80);
-console.log("listening on port 80");
+app.listen(314);
+console.log("listening on port 314");
