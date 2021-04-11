@@ -38,7 +38,7 @@ app.get('/*', function(req, res) {
 	// test sourceFile extension
 	sourceFile.match(/\.(\w+)$/);
 	var extension=RegExp.$1;
-	//console.log("demande du fichier " + sourceFile + " dont l'extension est " + extension);
+	console.log("demande du fichier " + sourceFile + " dont l'extension est " + extension);
 	
 	
 	fs.readFile('./site/'+sourceFile, function(err, data) {
@@ -52,6 +52,7 @@ app.get('/*', function(req, res) {
 		}
 		else
 		{
+			console.log("trouvage du fichier " + './site/'+sourceFile + " dont l'extension est " + extension);
 			res.setHeader('Content-Type', 'text/'+extension);
 			res.write(data);
 			res.end();
@@ -69,7 +70,7 @@ app.get('/plats/(.*/)*:imgPlat', function(req, res) {
 	// test image extension
 	req.params.imgPlat.match(/\.(\w+)$/);
 	var extension=RegExp.$1;
-	//console.log("demande du fichier " + req.params.imgPlat + " dont l'extension est " + extension);
+	console.log("demande du fichier image " + req.params.imgPlat + " dont l'extension est " + extension);
 	
 	fs.readFile('./site/plats/'+req.params.imgPlat, function(err, data) {
 		if (err){

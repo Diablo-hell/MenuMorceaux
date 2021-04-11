@@ -22,6 +22,24 @@ date="7 Juillet";
 
 var NB_MAX_ELTS_REPAS = 2;
 
+$.ajax({
+	url:"plats/plats.json",
+	success:function(data,successStr)
+	{
+		console.log("JSON des plats correctement chargé");
+		for(plat in data.plats)
+		{
+			var nouveauPlat = $("#listePlatsFavoris  .platSelectPatern").clone();
+			nouveauPlat.removeClass("platSelectPatern");
+			nouveauPlat.find(".imgPlat").append($('<img src="plats/'+data.plats[plat].pict+'">'));
+			nouveauPlat.find(".nomPlat").text(data.plats[plat].nom);
+			
+			$("#listePlatsFavoris").append(nouveauPlat);
+		}
+	},
+	error:function(jqxhr,data){console.log("errror : " + data);}
+	});
+
 // ajout des 7 jours de la semaine dans le visuel du menu.
 for(u=0;u<7;u++)
 {
