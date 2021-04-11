@@ -1,0 +1,18 @@
+{
+	"plats" : 
+	[
+		"1-gratin_de_limac$":
+		{
+			"id":1,
+			"nom":"gratin de limace",
+			"ingrédients": ["gras", "thym", "limaces"]
+		}
+		
+		"2-nonuches_crotte$":
+		{
+			"id":2,
+			"nom":"nonuches, crottes de chien qu'on suce.",
+			"ingrédients": ["nonuches", "cocker", "riz", "glaçons", "battonets"]
+		}
+	]
+}

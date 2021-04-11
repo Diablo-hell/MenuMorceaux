@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="MenuMorceaux.css" />
+		<title>Menu-Morceaux</title>
+	</head>
+	<body>
+		<div>
+			Super repas garanti !
+		</div>
+		</br>
+		<div>
+			<div id="headBar" class = "rbt">
+				<div id="titreMenu" class="menuObj"> Menu de la semaine </div>
+				<div id="titrePlats" class="platsObj"> Plats Favoris </div>
+				<div id="titreCourses" class="coursesObj"> Plats Favoris </div>
+				<button id="mainQuittButton" class="quittButton platsObj coursesObj"> &times </button>
+			</div>
+			<section id="sectionMenu" class="rac flexFill menuObj">
+				<div class="cct" id="DivMenuSemaine">
+					<div id="TabMenuSemaine" class="rac">
+					<!-- jours remplis automatiquement par le code javascript -->
+					</div>
+				   
+					<div class="rac" style="width:100%">
+						<div> fleche gauche</div>
+						<div> semaine <text id="numSemaine"> 48 </text></div>
+						<div> fleche droite</div>
+					</div>
+				</div>
+				
+				<div class="zone_boutons ccc">
+					<button id="boutonAjoutPlat" class="ccc">
+						Ajouter un Plats
+					</button>
+					<button id="boutonCourses" class="ccc">
+						Courses
+					</button>
+				</div>
+			</section>
+			
+			<section id="sectionPlats" class="cac flexFill platsObj">
+				<div class="ccc"> Repas enregistrés</div>
+				<table id="listePlatsFavoris">
+					<tr class = "platSelect rsc">
+						<th>
+							<img src="plats/1-gratin_de_limac$.jpg" alt="limace">
+						</th>
+						<th>
+							gratin de limace
+						</th>
+					</tr>
+					<tr class = "platSelect rsc">
+						<th>
+							<img src="plats/2-nonuches_crotte$.jpg" alt="limace">
+						</th>
+						<th>
+							nonuches, crottes de chien qu'on suce.
+						</th>
+					</tr>
+				</table>
+				<div class = "rac">
+					<button id="platsOkButton"> Sélectionner </button>
+					<button id="nouveauPlatButton"> Nouveau Plat </button>
+				</div>
+			</section>
+			
+			<section id="sectionCourses plat" class="rac flexFill coursesObj">
+				
+			</section>
+		</div>
+	<script src="JQuery/jquery-git.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="MenuMorceaux.js"></script>
+	</body>
+</html>
