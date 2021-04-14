@@ -112,9 +112,9 @@ app.post('/api', (req, res, next) => {
 		console.log("new year : " + year);
 		if(Number(year) > 2000)
 		{
-			if(fs.existsSync("menus/"+year+".json"))
+			if(fs.existsSync("site/menus/"+year+".json"))
 			{
-				var rawData = fs.readFileSync("menus/"+year+".json");
+				var rawData = fs.readFileSync("site/menus/"+year+".json");
 				var menu = JSON.parse(rawData);
 			}
 			else
@@ -138,7 +138,7 @@ app.post('/api', (req, res, next) => {
 			}
 			console.log("\n\n menu : \n\n");
 			console.log(menu);
-			fs.writeFileSync("menus/"+year+".json",JSON.stringify(menu,null,4));
+			fs.writeFileSync("site/menus/"+year+".json",JSON.stringify(menu,null,4));
 		}
 	}
 });

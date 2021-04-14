@@ -12,7 +12,7 @@
 		"2-nonuches_crotte$":
 		{
 			"id":2,
-			"nom":"nonuches, crottes de chien qu'on suce.",
+			"nom":"nonuches",
 			"pict":"2-nonuches_crotte$.JPG",
 			"ingrédients": ["nonuches", "cocker", "riz", "glaçons", "battonets"]
 		}

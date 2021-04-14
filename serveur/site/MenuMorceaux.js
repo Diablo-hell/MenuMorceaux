@@ -34,12 +34,14 @@ $.ajax({
 		{
 			var nouveauPlat = $("#listePlatsFavoris  .platSelectPatern").clone();
 			nouveauPlat.removeClass("platSelectPatern");
-			nouveauPlat.attr("id",data.plats[plat].nom);
+			nouveauPlat.attr("id",data.plats[plat].nom.replace(/\s/g,"_"));
 			nouveauPlat.find(".imgPlat").append($('<img src="plats/'+data.plats[plat].pict+'">'));
 			nouveauPlat.find(".nomPlat").text(data.plats[plat].nom);
 			
 			$("#listePlatsFavoris").append(nouveauPlat);
 		}
+		
+		chargerMenuSemaine(displayedDate);
 	},
 	error:function(jqxhr,data){console.log("errror : " + data);}
 });
@@ -74,6 +76,57 @@ for(u=0;u<7;u++)
 						'</div>');
 }
 // *******************************************************
+
+function getWeekNumber(d1) {
+    // Copy date so don't modify original
+    var d = new Date(Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate()));
+    // Set to nearest Thursday: current date + 4 - current day number
+    // Make Sunday's day number 7
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+    // Get first day of year
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    // Calculate full weeks to nearest Thursday
+    var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+    // Return array of year and week number
+    return [d.getUTCFullYear(), weekNo];
+};
+
+var  displayedDate = getWeekNumber(new Date());
+
+function chargerMenuSemaine(date)
+{
+	$.ajax(
+	{
+		type:"GET",
+		url:"menus/"+date[0]+".json",
+		loadToDate : date,
+		success:function(jsonFileData,successStr)
+		{
+			
+			$("#annee").text(this.loadToDate[0]);
+			$("#numSemaine").text(this.loadToDate[1]);
+			$("#DivMenuSemaine").attr("annee",this.loadToDate[0]);
+			$("#DivMenuSemaine").attr("semaine",this.loadToDate[1]);
+			
+			if(jsonFileData[this.loadToDate[1]] == null)
+				return ;
+			
+			console.log("JSON du menu correctement chargé");
+			for(var u = 0; u<7;u++ )
+			{
+				var day = $("#TabMenuSemaine>div:nth-child("+(u+1)+")");
+				
+				if(jsonFileData[this.loadToDate[1]][u].midi != null)
+					ajoutPlatRepas(day.find(".midi .repasMidiSoir>div:first-child()"),jsonFileData[this.loadToDate[1]][u].midi);
+				if(jsonFileData[this.loadToDate[1]][u].soir != null)
+					ajoutPlatRepas(day.find(".soir .repasMidiSoir>div:first-child()"),jsonFileData[this.loadToDate[1]][u].soir);
+			}
+		},
+		error:function(jqxhr,data){console.log("errror : " + data);}
+		
+	});
+};
+
 
 // évènement de click par défaut => un élément sans effet déselectionne le dernier élément.
 last_select=null
@@ -208,6 +261,21 @@ updateRepasEltCount = function(repas, increment)
 
 /* ********************************************************** */
 /* *************** Section sélection de Plats *************** */
+
+
+function ajoutPlatRepas(repasJq, idPlat)
+{
+	showTabclass(".menuObj");
+	var platJq = $("#sectionPlats #"+idPlat.replace(/\s/g,"_"));
+	$(repasJq).append('<div class="plat" id = "' + $(platJq).attr("id") + '" >'+
+					$(platJq).find("th:first-child").html()+
+					"<span>" + $(platJq).find("th:nth-child(2)").html() + "</span>" + 
+					'<button class="removePlatBtn"> &times </button>'+
+				'</div>');
+	updateRepasEltCount($(repasJq), +1);
+};
+	
+
 selectionPlat=function(repas)
 {// on reconstruit à chaque fois les calbacks pour que le plat choisi soit bien envoyé dans le jour demandé.
 	showTabclass(".platsObj");
@@ -244,14 +312,8 @@ selectionPlat=function(repas)
 		{	
 			if($(last_select).hasClass("platSelect"))
 			{
-				showTabclass(".menuObj");
-				$(repas).append('<div class="plat" id = "' + $(last_select).attr("id") + '" >'+
-								$(last_select).find("th:first-child").html()+
-								"<span>" + $(last_select).find("th:nth-child(2)").html() + "</span>" + 
-								'<button class="removePlatBtn"> &times </button>'+
-							'</div>');
-				
-				updateRepasEltCount($(repas), +1);
+				var idPlat = $(last_select).attr("id");
+				ajoutPlatRepas(repas, idPlat);
 				$(repas).find(".removePlatBtn").hide();
 				$(".plat").hover(platHoverInHandler , platHoverOutHandler);
 				$(".removePlatBtn").click(removePlatBtnClickHandler);
@@ -260,8 +322,8 @@ selectionPlat=function(repas)
 				for(var u=0; u<7; u++)
 				{
 					nouveauMenu[u] = { // la numération des nth-child commence à 1
-						midi : $("#TabMenuSemaine>div:nth-child(" + u+1 + ") .midi .repasMidiSoir .plat").attr("id") , 
-						soir : $("#TabMenuSemaine>div:nth-child(" + u+1 + ") .soir .repasMidiSoir .plat").attr("id")
+						midi : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .midi .repasMidiSoir .plat").attr("id") , 
+						soir : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .soir .repasMidiSoir .plat").attr("id")
 					}
 				}
 				
@@ -288,7 +350,6 @@ selectionPlat=function(repas)
 }
 /* *************** Fin Section sélection de Plats *************** */
 /* ************************************************************** */
-
 
 
 /* Generation des classes flex */
