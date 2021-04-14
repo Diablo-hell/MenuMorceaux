@@ -206,14 +206,14 @@ body>div:first-child
 	resize:none;
 }
 
-.MidiSoir,.notes,.repas
+.midiSoir,.notes,.repas
 {
 	background-color:rgb(250,208,122);
 	width:100%;
 	max-width : 100%;
 }
 
-.MidiSoir
+.midiSoir
 {
 	background-color:rgb(245, 172, 20);
 	user-select: none;

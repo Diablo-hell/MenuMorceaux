@@ -1,6 +1,8 @@
 var fs = require('fs');
 var io = require('socket.io');
 
+const express = require("express");
+
 var url = require('url');
 
 // var app = express();
@@ -93,6 +95,56 @@ app.get('/plats/(.*/)*:imgPlat', function(req, res) {
 // ***** end website picture files ***** //
 // ************************************* //
 
+app.use(express.json({limite:'1mb'}));
+// **************************** //
+// ******* POST request ******* //
+app.post('/api', (req, res, next) => {
+	console.log("POST request! contant les champs :");
+	
+	console.log(req.body);
+	console.log("process.cwd() : " + process.cwd());
+	res.status(201).json({
+		message: 'Objet créé !'
+	});
+	
+	for(var year in req.body)
+	{
+		console.log("new year : " + year);
+		if(Number(year) > 2000)
+		{
+			if(fs.existsSync("menus/"+year+".json"))
+			{
+				var rawData = fs.readFileSync("menus/"+year+".json");
+				var menu = JSON.parse(rawData);
+			}
+			else
+			{
+				menu = {};
+			}
+			for(week  in req.body[year])
+			{
+				console.log("new week : " + week + " Number.isInteger(week) : " + Number.isInteger(week) + " req.body[year][week].length : " + req.body[year][week].length);
+				if(Number.isInteger(Number(week)))
+				{
+					if(!menu[week])
+						menu[week] = [];
+					
+					for(day =0 ; day < req.body[year][week].length;day++)
+					{
+						console.log("new day : " + day);
+						menu[week][day] = req.body[year][week][day];
+					}
+				}
+			}
+			console.log("\n\n menu : \n\n");
+			console.log(menu);
+			fs.writeFileSync("menus/"+year+".json",JSON.stringify(menu,null,4));
+		}
+	}
+});
+// ******* end POST request ******* //
+// ******************************** //
+
 // ************************* //
 // ******* not found ******* //
 app.use(function(req, res, next){
@@ -104,7 +156,6 @@ app.use(function(req, res, next){
 });
 // ***** end not found ***** //
 // ************************* //
-
 
 // ************************* //
 // ******* Websocket ******* //

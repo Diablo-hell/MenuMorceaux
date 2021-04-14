@@ -22,7 +22,10 @@ date="7 Juillet";
 
 var NB_MAX_ELTS_REPAS = 2;
 
+// *****************************************************************************
+// Génération de la liste des plats à partir du fichier JSON demandé au serveur.
 $.ajax({
+	type:"GET",
 	url:"plats/plats.json",
 	success:function(data,successStr)
 	{
@@ -31,6 +34,7 @@ $.ajax({
 		{
 			var nouveauPlat = $("#listePlatsFavoris  .platSelectPatern").clone();
 			nouveauPlat.removeClass("platSelectPatern");
+			nouveauPlat.attr("id",data.plats[plat].nom);
 			nouveauPlat.find(".imgPlat").append($('<img src="plats/'+data.plats[plat].pict+'">'));
 			nouveauPlat.find(".nomPlat").text(data.plats[plat].nom);
 			
@@ -38,16 +42,18 @@ $.ajax({
 		}
 	},
 	error:function(jqxhr,data){console.log("errror : " + data);}
-	});
+});
+// *****************************************************************************
 
+// *******************************************************
 // ajout des 7 jours de la semaine dans le visuel du menu.
 for(u=0;u<7;u++)
 {
 	$("#TabMenuSemaine").append(''+
-						'<div id="Col' + jours[u] + '" class="ccc ColJour">'+
+						'<div id="Col' + jours[u] + '" nJour = ' + u + ' class="ccc ColJour">'+
 							'<div class="jour ccc">' + jours[u] + ' </br> ' + date + '</div>'+
-							'<div class="ConteneurMidiSoir cet">'+
-								'<div class="MidiSoir">Midi</div>'+
+							'<div class="ConteneurMidiSoir midi cet">'+
+								'<div class="midiSoir">Midi</div>'+
 								'<div class="repasMidiSoir ccc" nb_elts = 0>'+
 									'<div class="csc" ></div>'+
 									'<div class="ccc addPlatDiv">'+
@@ -55,8 +61,8 @@ for(u=0;u<7;u++)
 									'</div>'+
 								'</div>'+
 							'</div>'+
-							'<div class="ConteneurMidiSoir cet">'+
-								'<div class="MidiSoir">Soir</div>'+
+							'<div class="ConteneurMidiSoir soir cet">'+
+								'<div class="midiSoir">Soir</div>'+
 								'<div class="repasMidiSoir ccc" nb_elts = 0>'+
 									'<div class="csc" ></div>'+
 									'<div class="ccc addPlatDiv">'+
@@ -67,6 +73,7 @@ for(u=0;u<7;u++)
 							'<textarea class="notes" placeholder="notes..."></textarea>'+
 						'</div>');
 }
+// *******************************************************
 
 // évènement de click par défaut => un élément sans effet déselectionne le dernier élément.
 last_select=null
@@ -238,16 +245,37 @@ selectionPlat=function(repas)
 			if($(last_select).hasClass("platSelect"))
 			{
 				showTabclass(".menuObj");
-				$(repas).append('<div class="plat">'+
+				$(repas).append('<div class="plat" id = "' + $(last_select).attr("id") + '" >'+
 								$(last_select).find("th:first-child").html()+
 								"<span>" + $(last_select).find("th:nth-child(2)").html() + "</span>" + 
 								'<button class="removePlatBtn"> &times </button>'+
 							'</div>');
-							
+				
 				updateRepasEltCount($(repas), +1);
 				$(repas).find(".removePlatBtn").hide();
 				$(".plat").hover(platHoverInHandler , platHoverOutHandler);
 				$(".removePlatBtn").click(removePlatBtnClickHandler);
+				
+				var nouveauMenu = [];
+				for(var u=0; u<7; u++)
+				{
+					nouveauMenu[u] = { // la numération des nth-child commence à 1
+						midi : $("#TabMenuSemaine>div:nth-child(" + u+1 + ") .midi .repasMidiSoir .plat").attr("id") , 
+						soir : $("#TabMenuSemaine>div:nth-child(" + u+1 + ") .soir .repasMidiSoir .plat").attr("id")
+					}
+				}
+				
+				var menuJq = $("#DivMenuSemaine");
+				
+				toto = nouveauMenu;
+				console.log("envoi du nouveau menu !");
+				
+				$.ajax({
+				  type: "POST",
+				  url: "/api",
+				  data: JSON.stringify({[menuJq.attr("annee")]:{[menuJq.attr("semaine")]:nouveauMenu}}),
+				  contentType: "application/json"
+				});
 			}
 		}
 	})
