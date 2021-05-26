@@ -121,6 +121,8 @@ function chargerMenuSemaine(date)
 				if(jsonFileData[this.loadToDate[1]][u].soir != null)
 					ajoutPlatRepas(day.find(".soir .repasMidiSoir>div:first-child()"),jsonFileData[this.loadToDate[1]][u].soir);
 			}
+			
+			$(".removePlatBtn").click(removePlatBtnClickHandler);
 		},
 		error:function(jqxhr,data){console.log("errror : " + data);}
 		
@@ -146,6 +148,7 @@ showTabclass = function(tab)
 {
 		$(".menuObj").hide();
 		$(".platsObj").hide();
+		$(".nouveauPlat").hide();
 		$(".coursesObj").hide();
 		
 		$(tab).show();
@@ -190,20 +193,8 @@ $(".ConteneurMidiSoir").click(function(evt){
 	last_select=this;
 })
 
-// affichage du bouton "+" lorsuqu'on passe au dessus d'un jour de la semaine avec un plat
-$(".ConteneurMidiSoir").hover(
-	function(evt){ // hover IN function
-		if($(this).find(".repasMidiSoir").attr("plein")== null)
-			{ $(this).find(".addPlatBtn").show(); }
-	},
-	function(evt){ // hover OUT function
-		$(this).find(".addPlatBtn").hide();
-	})
-// boutons "+" cachés par défaut
-$(".addPlatBtn").hide();
-
 // affichage de la sélection de plats sur appui sur "+"
-$(".repasMidiSoir .addPlatBtn").click(function(evt){ // hover IN function
+$(".repasMidiSoir .addPlatBtn").click(function(evt){
 	selectionPlat($(this).parents(".repasMidiSoir").find(">div:first-child"));
 })
 
@@ -224,24 +215,14 @@ $("#boutonAjoutPlat").click(function(evt){
 		$(this).css("border-style","solid");
 		last_select=this;
 	}
-})
-
-platHoverInHandler = 
-	function(evt){ // hover IN function
-		//evt.stopPropagation();
-		$(this).find(".removePlatBtn").show();
-	};
-platHoverOutHandler = 
-	function(evt){ // hover OUT function
-		//evt.stopPropagation();
-		$(this).find(".removePlatBtn").hide();
-	};
+});
 	
-removePlatBtnClickHandler = 
-	function(evt){ // hover OUT function
+removePlatBtnClickHandler =  function(evt){
 		evt.stopPropagation();
 		updateRepasEltCount($(this), -1);
 		$(this).parents(".plat").remove();
+		
+			sendMenuToServer();
 	};
 updateRepasEltCount = function(repas, increment)
 {
@@ -255,6 +236,30 @@ updateRepasEltCount = function(repas, increment)
 	else
 		{repas.removeAttr("plein"); }
 }
+
+function sendMenuToServer()
+{
+	var nouveauMenu = [];
+	for(var u=0; u<7; u++)
+	{
+		nouveauMenu[u] = { // la numération des nth-child commence à 1
+			midi : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .midi .repasMidiSoir .plat").attr("id") , 
+			soir : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .soir .repasMidiSoir .plat").attr("id")
+		}
+	}
+
+	var menuJq = $("#DivMenuSemaine");
+
+	toto = nouveauMenu;
+	console.log("envoi du nouveau menu !");
+
+	$.ajax({
+	  type: "POST",
+	  url: "/api",
+	  data: JSON.stringify({[menuJq.attr("annee")]:{[menuJq.attr("semaine")]:nouveauMenu}}),
+	  contentType: "application/json"
+	});
+};
 /* *************** Fin Section Menu *************** */
 /* ************************************************ */
 
@@ -314,31 +319,11 @@ selectionPlat=function(repas)
 			{
 				var idPlat = $(last_select).attr("id");
 				ajoutPlatRepas(repas, idPlat);
-				$(repas).find(".removePlatBtn").hide();
-				$(".plat").hover(platHoverInHandler , platHoverOutHandler);
 				$(".removePlatBtn").click(removePlatBtnClickHandler);
 				
-				var nouveauMenu = [];
-				for(var u=0; u<7; u++)
-				{
-					nouveauMenu[u] = { // la numération des nth-child commence à 1
-						midi : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .midi .repasMidiSoir .plat").attr("id") , 
-						soir : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .soir .repasMidiSoir .plat").attr("id")
-					}
-				}
 				
-				var menuJq = $("#DivMenuSemaine");
-				
-				toto = nouveauMenu;
-				console.log("envoi du nouveau menu !");
-				
-				$.ajax({
-				  type: "POST",
-				  url: "/api",
-				  data: JSON.stringify({[menuJq.attr("annee")]:{[menuJq.attr("semaine")]:nouveauMenu}}),
-				  contentType: "application/json"
-				});
 			}
+			sendMenuToServer();
 		}
 	})
 	
@@ -351,6 +336,49 @@ selectionPlat=function(repas)
 /* *************** Fin Section sélection de Plats *************** */
 /* ************************************************************** */
 
+/* ***************************************************** */
+/* *************** Section nouveau Plats *************** */
+$("#nouveauPlatButton").click(function(evt){
+	showTabclass(".nouveauPlat");
+});
+
+$('#sectionNouveauPlat .newInput input').keyup(function(e) {
+	if(e.keyCode == 13) // KeyCode de la touche entrée
+	{
+		str = $(this).val();
+		var texte=$("<div>"+str[0].toUpperCase() + str.substr(1)+"</div>");
+		var div=$($(this).parent().clone());
+		div.append(texte).find("input").remove();
+		$(this).parents("#commentaires, #ingrédients").find(".newInput").before(div);
+		$(this).val(null);
+	}
+}); 
+
+$('#platPict #selectPlatPict').change(function(e) {
+	console.log("fichier ! ");
+	
+	var img = $(this).parents("#platPict").find("img");
+	img.removeClass("defautImg");
+	
+	var file = $(this).prop('files')[0];
+	// Check if the file is an image.
+	if (file.type && !file.type.startsWith('image/')) {
+		console.log('File is not an image.', file.type, file);
+		return;
+	}
+
+	const reader = new FileReader();
+	reader.addEventListener('load', (event) => {
+		console.log("event.target.result");
+		console.log(event.target.result);
+		img.attr("src", event.target.result);
+	});
+	reader.readAsDataURL(file);
+}); 
+/* *************** Fin Section nouveau Plats *************** */
+/* ********************************************************* */
+
+//setTimeout(function(){showTabclass(".nouveauPlat");},300);
 
 /* Generation des classes flex */
 /*

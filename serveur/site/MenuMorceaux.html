@@ -5,21 +5,21 @@
 		<link rel="stylesheet" href="MenuMorceaux.css" />
 		<title>Menu-Morceaux</title>
 	</head>
-	<body>
-		<div>
+	<body class="cbt">
+		<div style="margin-bottom : 12px">
 			Super repas garanti !
 		</div>
-		</br>
-		<div>
+		<div class="cbt flexFill">
 			<div id="headBar" class = "rbt">
 				<div id="titreMenu" class="menuObj"> Menu de la semaine </div>
 				<div id="titrePlats" class="platsObj"> Plats Favoris </div>
 				<div id="titreCourses" class="coursesObj"> Plats Favoris </div>
-				<button id="mainQuittButton" class="quittButton platsObj coursesObj"> &times </button>
+				<div id="titreCourses" class="nouveauPlat"> Nouveau Plat </div>
+				<button id="mainQuittButton" class="quittButton platsObj coursesObj nouveauPlat"> &times </button>
 			</div>
-			<section id="sectionMenu" class="rac flexFill menuObj">
-				<div class="cct" id="DivMenuSemaine" semaine = 48 annee=2021 >
-					<div id="TabMenuSemaine" class="rac">
+			<section id="sectionMenu" class="rat flexFill menuObj">
+				<div class="cct flexFill" id="DivMenuSemaine" semaine = 48 annee=2021 >
+					<div id="TabMenuSemaine" class="rat flexFill">
 					<!-- jours remplis automatiquement par le code javascript -->
 					</div>
 				   
@@ -40,23 +40,53 @@
 				</div>
 			</section>
 			
-			<section id="sectionPlats" class="cac flexFill platsObj">
+			<section id="sectionPlats" class="cbt flexFill platsObj">
 				<div class="ccc"> Repas enregistrés</div>
-				<table id="listePlatsFavoris">
-					<tr class = "platSelect rsc platSelectPatern">
-						<th class="imgPlat">
-						</th>
-						<th class="nomPlat">
-						</th>
-					</tr>
-				</table>
+				<div id="divPlatsFavoris" class="cst flexFill">
+					<table id="listePlatsFavoris" >
+						<tr class = "platSelect rsc platSelectPatern">
+							<th class="imgPlat">
+							</th>
+							<th class="nomPlat">
+							</th>
+						</tr>
+					</table>
+				</div>
 				<div class = "rac">
 					<button id="platsOkButton"> Sélectionner </button>
 					<button id="nouveauPlatButton"> Nouveau Plat </button>
 				</div>
 			</section>
 			
-			<section id="sectionCourses plat" class="rac flexFill coursesObj">
+			<section id="sectionNouveauPlat" class="cst flexFill nouveauPlat">
+				<div id="nomPlat" class="rct ">
+					<input placeholder="Nom du Plat"/>
+				</div>
+				<div id="divNouveauPLat" class="rbt flexFill">
+					<div id="platPict" class = "ccc">
+						<img class="defautImg" src="plats/nouveauPlatDefaut.jpg"/>
+						<input type="file" id="selectPlatPict" accept="image/png, image/jpeg">
+					</div>
+					<div class = "cat flexFill">
+						<div id = "commentaires">
+							<div>Recette / Commentaires</div>
+							<div class="newInput rst">
+								<div class="puce">&squf; </div>
+								<input class="flexFill" placeholder="Ecrivez quelque chose et tapez entrée pour l'ajouter à la liste."/>
+							</div>
+						</div>
+						<div id = "ingrédients">
+							<div>Ingrédients</div>
+							<div class="newInput rst">
+								<div class="puce">&squf; </div>
+								<input class="flexFill" placeholder="Ecrivez quelque chose et tapez entrée pour l'ajouter à la liste."/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<section id="sectionCourses" class="rac flexFill coursesObj">
 				
 			</section>
 		</div>

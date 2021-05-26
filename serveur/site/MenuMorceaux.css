@@ -1,3 +1,22 @@
+:root{
+  		--background1: rgb(221,221,221);
+  		--background2: rgb(200,230,160);
+  		--background3: rgb(250,208,122);
+  		--button1: #8c9e8d;
+  		--button2: rgb(245, 172, 20);
+  		--button3: #ffd400;
+	}
+
+
+
+html{
+	height : 100%;
+	width : 100%;
+}body{
+	min-height : 95%;
+	min-width :  95%;
+}
+
 body *
 {
 	box-sizing:border-box;
@@ -19,7 +38,7 @@ button {
 
 body
 {
-	background-color:rgb(221,221,221);
+	background-color:var(--background1);
 	position: relative;
 }
 
@@ -38,7 +57,6 @@ section{
 
 section>*
 {
-	flex: 1;
 	margin : 0 2px 0 2px;
 }
 
@@ -62,18 +80,12 @@ body>div:first-child
 	width: 1.2rem;
 	height: 1.2rem;
 	border-radius : 100%;
-	background: #8c9e8d;
+	background: var(--button1);
 	border: 2px solid #222b22;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-}
-
-#DivMenuSemaine
-{
-	/*border-radius : 3%;*/
-	background-color:rgb(200,230,160);
 }
 
 #TabMenuSemaine> div
@@ -89,7 +101,6 @@ body>div:first-child
 .ColJour {
     border: 1px solid black;
 	border-collapse: collapse;
-	min-height:39em;
 	margin : 7px;
 	padding : 2px;
 	flex : 1;
@@ -168,8 +179,12 @@ body>div:first-child
 	width: 1.2rem;
 	height: 100%;
 	border-radius : 100%;
-	background-color:rgb(245, 172, 20);
+	background-color:var(--button2);
 	border: 2px solid #222b22;
+	display : none;
+}
+
+#TabMenuSemaine .ConteneurMidiSoir:hover .addPlatBtn {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -188,14 +203,18 @@ body>div:first-child
 	border-radius : 100%;
 	background-color: #5ab432;
 	border: 2px solid red;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	display: none;
 	
     position: absolute;
 	bottom : 0.2rem;
 	right : 0.2rem;
+}
+
+#TabMenuSemaine .plat:hover .removePlatBtn {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .notes{
@@ -208,7 +227,7 @@ body>div:first-child
 
 .midiSoir,.notes,.repas
 {
-	background-color:rgb(250,208,122);
+	background-color:var(--background3);
 	width:100%;
 	max-width : 100%;
 }
@@ -239,7 +258,7 @@ body>div:first-child
 }
 
 .zone_boutons>* {
-	background:#ffd400;
+	background:var(--button3);
 	border-radius : 10px;
 	margin:3%;
 	min-height:2.5em;
@@ -259,11 +278,17 @@ body>div:first-child
 	width : 100%;
 }
 
+#divPlatsFavoris, #divPlatsFavoris , #DivMenuSemaine, #divNouveauPLat
+{
+	background-color:var(--background2);
+}
+
 #listePlatsFavoris  .platSelect
 {
 	width : 100%;
 	border : 1px solid black;
 	margin : 0.2em 0 0.2em 0 ;
+	background-color:rgb(250,208,122);
 }
 #listePlatsFavoris  .platSelectPatern
 {
@@ -282,6 +307,34 @@ body>div:first-child
 	margin : 1em 2em 1em 2em;
 	font-size : 1rem;
 	width : 100px;
+}
+
+#sectionNouveauPlat #platPict {
+	width : 50%;
+}
+
+
+#sectionNouveauPlat #commentaires, #sectionNouveauPlat #ingrédients {
+	height : 48%;
+	background-color:rgb(250,208,122);
+	padding : 4px;
+}
+
+#sectionNouveauPlat #platPict img {
+	margin-bottom : 12px;
+}
+
+#sectionNouveauPlat .defautImg {
+	filter: brightness(0.5);
+}
+
+#sectionNouveauPlat .newInput {
+	margin-top : 12px;
+	width : 100%;
+}
+.puce {
+	margin-right:5px;
+	font-size:15px;
 }
 
 .popup {
