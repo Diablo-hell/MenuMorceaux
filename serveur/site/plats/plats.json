@@ -1,20 +1,22 @@
 {
-	"plats" : 
-	{
-		"1-gratin_de_limac$":
-		{
-			"id":1,
-			"nom":"gratin de limace",
-			"pict":"1-gratin_de_limac$.JPG",
-			"ingrédients": ["gras", "thym", "limaces"]
-		},
-		
-		"2-nonuches_crotte$":
-		{
-			"id":2,
-			"nom":"nonuches",
-			"pict":"2-nonuches_crotte$.JPG",
-			"ingrédients": ["nonuches", "cocker", "riz", "glaçons", "battonets"]
-		}
-	}
+    "gratinDeLimace": {
+        "nom": "gratin de limace",
+        "pict": "gratin_de_limace.JPG",
+        "ingredients": [
+            "gras",
+            "thym",
+            "limaces"
+        ]
+    },
+    "nonuches": {
+        "nom": "nonuches",
+        "pict": "nonuches.JPG",
+        "ingredients": [
+            "nonuches",
+            "cocker",
+            "riz",
+            "glaçons",
+            "battonets"
+        ]
+    }
 }

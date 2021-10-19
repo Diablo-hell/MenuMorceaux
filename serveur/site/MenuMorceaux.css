@@ -184,7 +184,7 @@ body>div:first-child
 	display : none;
 }
 
-#TabMenuSemaine .ConteneurMidiSoir:hover .addPlatBtn {
+#TabMenuSemaine .ConteneurMidiSoir:hover .repasMidiSoir:not([plein=true]) .addPlatBtn {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -197,12 +197,15 @@ body>div:first-child
 	position : relative;
 }
 
-.removePlatBtn {
+.removePlatBtn,.removePlatListeBtn {
 	height : 1.2rem;
 	width: 1.2rem;
 	border-radius : 100%;
 	background-color: #5ab432;
 	border: 2px solid red;
+}
+
+.removePlatBtn {
 	display: none;
 	
     position: absolute;
@@ -216,7 +219,6 @@ body>div:first-child
 	justify-content: center;
 	align-items: center;
 }
-
 .notes{
 	border-radius : 8px;
 	padding :8px;
@@ -301,20 +303,34 @@ body>div:first-child
 	font-size : 1.4rem;
 	user-select: none; /* Standard */
 }
-
 #listePlatsFavoris  .platSelect > th:first-child
 {
 	margin : 1em 2em 1em 2em;
 	font-size : 1rem;
 	width : 100px;
 }
+#listePlatsFavoris  .platSelect > th.nomPlat
+{
+	text-align: left;
+	width : 400px;
+}
+#listePlatsFavoris  .platSelect > th.ingredientsPlat
+{
+	text-align: left;
+	flex:1;
+}
 
 #sectionNouveauPlat #platPict {
 	width : 50%;
 }
 
+#sectionNouveauPlat #platPict img {
+	max-width : 80%;
+	max-height : 80%;
+}
 
-#sectionNouveauPlat #commentaires, #sectionNouveauPlat #ingrédients {
+
+#sectionNouveauPlat #commentaires, #sectionNouveauPlat #ingredients {
 	height : 48%;
 	background-color:rgb(250,208,122);
 	padding : 4px;
@@ -324,7 +340,7 @@ body>div:first-child
 	margin-bottom : 12px;
 }
 
-#sectionNouveauPlat .defautImg {
+#sectionNouveauPlat .defaultImg {
 	filter: brightness(0.5);
 }
 

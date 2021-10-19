@@ -18,33 +18,69 @@ $("#headBar #titrePlats").hide();
 $("#headBar #titreCourses").hide();
 $("#headBar #mainQuittButton").hide();
 
-date="7 Juillet";
+var date="7 Juillet";
 
 var NB_MAX_ELTS_REPAS = 2;
+var firstMenuLoaded = false;
 
 // *****************************************************************************
 // Génération de la liste des plats à partir du fichier JSON demandé au serveur.
-$.ajax({
-	type:"GET",
-	url:"plats/plats.json",
-	success:function(data,successStr)
-	{
-		console.log("JSON des plats correctement chargé");
-		for(plat in data.plats)
+function getListePlats()
+{
+	$.ajax({
+		type:"GET",
+		url:"plats/plats.json",
+		success:function(data,successStr)
 		{
-			var nouveauPlat = $("#listePlatsFavoris  .platSelectPatern").clone();
-			nouveauPlat.removeClass("platSelectPatern");
-			nouveauPlat.attr("id",data.plats[plat].nom.replace(/\s/g,"_"));
-			nouveauPlat.find(".imgPlat").append($('<img src="plats/'+data.plats[plat].pict+'">'));
-			nouveauPlat.find(".nomPlat").text(data.plats[plat].nom);
+			$("#listePlatsFavoris tr:not(.platSelectPatern)").remove();
+			console.log("JSON des plats correctement chargé");
+			for(plat in data)
+			{
+				var nouveauPlat = $("#listePlatsFavoris  .platSelectPatern").clone();
+				nouveauPlat.removeClass("platSelectPatern");
+				nouveauPlat.attr("id",plat);
+				nouveauPlat.find(".imgPlat").append($('<img src="plats/'+data[plat].pict+'">'));
+				nouveauPlat.find(".nomPlat").text(data[plat].nom);
+				
+				var listeIngredients = $("<ul></ul>");
+				var N_MAX_INGREDIENTS = 4;
+				var uLim = Math.min(N_MAX_INGREDIENTS ,data[plat].ingredients.length);
+				for(var u=0; u< uLim ;u++)
+				{
+					listeIngredients.append("<li>"+data[plat].ingredients[u]+"</li>");
+				}
+				if(data[plat].ingredients.length>N_MAX_INGREDIENTS)
+				{
+					var extraIngredients = "";
+					for(var u=N_MAX_INGREDIENTS-1; u< data[plat].ingredients.length ;u++)
+					{
+						extraIngredients+=("-"+data[plat].ingredients[u]+"\n");
+					}
+					$(listeIngredients.find("li")[N_MAX_INGREDIENTS-1]).html("...").attr("title",extraIngredients);
+				}
+				nouveauPlat.find(".ingredientsPlat").html(listeIngredients);
+				
+				$("#listePlatsFavoris").append(nouveauPlat);
+			}
+					
+			$("#listePlatsFavoris  .platSelect").unbind("dblclick");
+			$("#listePlatsFavoris  .platSelect *").unbind("dblclick");
+			$("#listePlatsFavoris  .platSelect").dblclick(platSelectOnDblClick);
+			$("#listePlatsFavoris  .platSelect").unbind("click");
+			$("#listePlatsFavoris  .platSelect *").unbind("click");
+			$("#listePlatsFavoris  .platSelect").click(platSelectOnclick);
 			
-			$("#listePlatsFavoris").append(nouveauPlat);
-		}
-		
-		chargerMenuSemaine(displayedDate);
-	},
-	error:function(jqxhr,data){console.log("errror : " + data);}
-});
+			if(!firstMenuLoaded)
+			{
+				chargerMenuSemaine(displayedDate);
+				firstMenuLoaded = true;
+			}
+			
+		},
+		error:function(jqxhr,data){console.log("errror : " + data);}
+	});
+};
+getListePlats();
 // *****************************************************************************
 
 // *******************************************************
@@ -93,6 +129,15 @@ function getWeekNumber(d1) {
 
 var  displayedDate = getWeekNumber(new Date());
 
+function viderMenu()
+{
+	var repas = $("#TabMenuSemaine .repasMidiSoir div:first-child");
+	for(var u=0; u<repas.length; u++)
+	{
+		$(repas[u]).html("");
+	}
+};
+
 function chargerMenuSemaine(date)
 {
 	$.ajax(
@@ -102,7 +147,6 @@ function chargerMenuSemaine(date)
 		loadToDate : date,
 		success:function(jsonFileData,successStr)
 		{
-			
 			$("#annee").text(this.loadToDate[0]);
 			$("#numSemaine").text(this.loadToDate[1]);
 			$("#DivMenuSemaine").attr("annee",this.loadToDate[0]);
@@ -112,14 +156,23 @@ function chargerMenuSemaine(date)
 				return ;
 			
 			console.log("JSON du menu correctement chargé");
+			viderMenu();
 			for(var u = 0; u<7;u++ )
 			{
 				var day = $("#TabMenuSemaine>div:nth-child("+(u+1)+")");
 				
 				if(jsonFileData[this.loadToDate[1]][u].midi != null)
-					ajoutPlatRepas(day.find(".midi .repasMidiSoir>div:first-child()"),jsonFileData[this.loadToDate[1]][u].midi);
+				{
+					var file_thisDayMidi = jsonFileData[this.loadToDate[1]][u].midi;
+					for(var v=0; v<file_thisDayMidi.length;v++ )
+						ajoutPlatRepas(day.find(".midi .repasMidiSoir>div:first-child()"),file_thisDayMidi[v]);
+				}
 				if(jsonFileData[this.loadToDate[1]][u].soir != null)
-					ajoutPlatRepas(day.find(".soir .repasMidiSoir>div:first-child()"),jsonFileData[this.loadToDate[1]][u].soir);
+				{
+					var file_thisDaySoir = jsonFileData[this.loadToDate[1]][u].soir;
+					for(var v=0; v<file_thisDaySoir.length;v++ )
+						ajoutPlatRepas(day.find(".soir .repasMidiSoir>div:first-child()"),file_thisDaySoir[v]);
+				}
 			}
 			
 			$(".removePlatBtn").click(removePlatBtnClickHandler);
@@ -199,7 +252,7 @@ $(".repasMidiSoir .addPlatBtn").click(function(evt){
 })
 
 
-// callback click sur ajoutde plats 
+// callback click sur ajout de plats 
 $("#boutonAjoutPlat").prop("onclick", null).off("click");
 $("#boutonAjoutPlat *").prop("onclick", null).off("click");
 $("#boutonAjoutPlat").click(function(evt){
@@ -216,6 +269,19 @@ $("#boutonAjoutPlat").click(function(evt){
 		last_select=this;
 	}
 });
+
+// callback click sur gestion plats 
+$("#gestionPlats").prop("onclick", null).off("click");
+$("#gestionPlats *").prop("onclick", null).off("click");
+$("#gestionPlats").click(function(evt){
+	showTabclass(".platsObj");
+	$("#sectionPlats #platsOkButton").attr("disabled",1);
+	$("#mainQuittButton").unbind("click");
+	$("#mainQuittButton").click(function(){
+		$("#sectionPlats #platsOkButton").removeAttr("disabled");
+		showTabclass(".menuObj");
+	});
+});
 	
 removePlatBtnClickHandler =  function(evt){
 		evt.stopPropagation();
@@ -224,6 +290,7 @@ removePlatBtnClickHandler =  function(evt){
 		
 			sendMenuToServer();
 	};
+
 updateRepasEltCount = function(repas, increment)
 {
 	if( !(repas.hasClass("repasMidiSoir")) )
@@ -242,9 +309,20 @@ function sendMenuToServer()
 	var nouveauMenu = [];
 	for(var u=0; u<7; u++)
 	{
+		var midi=[];
+		var platsMidi = $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .midi .repasMidiSoir .plat");
+		for(var v=0; v<platsMidi.length;v++)
+			midi.push(platsMidi[v].id)
+		
+		var soir=[];
+		var platsSoir = $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .soir .repasMidiSoir .plat");
+		for(var v=0; v<platsSoir.length;v++)
+			soir.push(platsSoir[v].id)
+		
+		
 		nouveauMenu[u] = { // la numération des nth-child commence à 1
-			midi : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .midi .repasMidiSoir .plat").attr("id") , 
-			soir : $("#TabMenuSemaine>div:nth-child(" + (u+1) + ") .soir .repasMidiSoir .plat").attr("id")
+			midi : midi , 
+			soir : soir
 		}
 	}
 
@@ -255,7 +333,7 @@ function sendMenuToServer()
 
 	$.ajax({
 	  type: "POST",
-	  url: "/api",
+	  url: "/menu",
 	  data: JSON.stringify({[menuJq.attr("annee")]:{[menuJq.attr("semaine")]:nouveauMenu}}),
 	  contentType: "application/json"
 	});
@@ -267,11 +345,12 @@ function sendMenuToServer()
 /* ********************************************************** */
 /* *************** Section sélection de Plats *************** */
 
+var lastPlatSelect;
 
 function ajoutPlatRepas(repasJq, idPlat)
 {
 	showTabclass(".menuObj");
-	var platJq = $("#sectionPlats #"+idPlat.replace(/\s/g,"_"));
+	var platJq = $("#sectionPlats #"+idPlat);
 	$(repasJq).append('<div class="plat" id = "' + $(platJq).attr("id") + '" >'+
 					$(platJq).find("th:first-child").html()+
 					"<span>" + $(platJq).find("th:nth-child(2)").html() + "</span>" + 
@@ -285,39 +364,13 @@ selectionPlat=function(repas)
 {// on reconstruit à chaque fois les calbacks pour que le plat choisi soit bien envoyé dans le jour demandé.
 	showTabclass(".platsObj");
 	
-	/* callback click sur les plats */
-	$("#listePlatsFavoris  .platSelect").unbind("click");
-	$("#listePlatsFavoris  .platSelect *").unbind("click");
-	$("#listePlatsFavoris  .platSelect").unbind("dblclick");
-	$("#listePlatsFavoris  .platSelect *").unbind("dblclick");
-	$("#listePlatsFavoris  .platSelect").click(function(evt){
-		evt.stopPropagation();
-		try{
-			$(last_select).css("border-width","");
-			$(last_select).css("border-color","");
-			$(last_select).css("border-style","");
-			$(last_select).css("border-radius","");
-		}catch(e){}
-		
-		$(this).css("border-width","3px");
-		$(this).css("border-color","orange");
-		$(this).css("border-style","solid");
-		$(this).css("border-radius","8px");
-		
-		last_select=this;
-	})
-	$("#listePlatsFavoris  .platSelect").dblclick(function(evt){
-		evt.stopPropagation();
-		$("#platsOkButton").trigger("click");
-	})
-	
 	$("#platsOkButton").unbind("click");
 	$("#platsOkButton").click(function(){
-		if(last_select!=null)
+		if(lastPlatSelect!=null)
 		{	
-			if($(last_select).hasClass("platSelect"))
+			if($(lastPlatSelect).hasClass("platSelect"))
 			{
-				var idPlat = $(last_select).attr("id");
+				var idPlat = $(lastPlatSelect).attr("id");
 				ajoutPlatRepas(repas, idPlat);
 				$(".removePlatBtn").click(removePlatBtnClickHandler);
 				
@@ -325,14 +378,54 @@ selectionPlat=function(repas)
 			}
 			sendMenuToServer();
 		}
-	})
+	});
 	
 	$("#mainQuittButton").unbind("click");
 	$("#mainQuittButton").click(function(){
 		showTabclass(".menuObj");
-	})
+	});
 	
-}
+};
+
+	
+/* callback click sur les plats */
+platSelectOnDblClick = function(evt){
+	evt.stopPropagation();
+	if(!$("#platsOkButton").attr("disabled"))
+		$("#platsOkButton").trigger("click");
+};
+
+platSelectOnclick = function(evt){
+	evt.stopPropagation();
+	if(lastPlatSelect){
+		$(lastPlatSelect).css("border-width","");
+		$(lastPlatSelect).css("border-color","");
+		$(lastPlatSelect).css("border-style","");
+		$(lastPlatSelect).css("border-radius","");
+	}
+	
+	$(this).css("border-width","3px");
+	$(this).css("border-color","orange");
+	$(this).css("border-style","solid");
+	$(this).css("border-radius","8px");
+	
+	lastPlatSelect=this;
+};
+
+deletePlatHandler = function(){
+	
+	var plat = $(lastPlatSelect).attr("id");
+	
+	$.ajax({
+	  type: "POST",
+	  url: "/plat",
+	  data: JSON.stringify({deletePlat:{nom:plat}}),
+	  contentType: "application/json",
+	  complete : function(){$("#mainQuittButton").click();getListePlats();}
+	});
+};
+$("#supprimerPlatButton").unbind("click");
+$("#supprimerPlatButton").click(deletePlatHandler);
 /* *************** Fin Section sélection de Plats *************** */
 /* ************************************************************** */
 
@@ -347,18 +440,17 @@ $('#sectionNouveauPlat .newInput input').keyup(function(e) {
 	{
 		str = $(this).val();
 		var texte=$("<div>"+str[0].toUpperCase() + str.substr(1)+"</div>");
-		var div=$($(this).parent().clone());
+		var div=$($(this).parent().clone().removeClass("newInput"));
 		div.append(texte).find("input").remove();
-		$(this).parents("#commentaires, #ingrédients").find(".newInput").before(div);
+		$(this).parents("#commentaires, #ingredients").find(".newInput").before(div);
 		$(this).val(null);
 	}
 }); 
 
 $('#platPict #selectPlatPict').change(function(e) {
-	console.log("fichier ! ");
 	
 	var img = $(this).parents("#platPict").find("img");
-	img.removeClass("defautImg");
+	img.removeClass("defaultImg");
 	
 	var file = $(this).prop('files')[0];
 	// Check if the file is an image.
@@ -369,12 +461,75 @@ $('#platPict #selectPlatPict').change(function(e) {
 
 	const reader = new FileReader();
 	reader.addEventListener('load', (event) => {
-		console.log("event.target.result");
-		console.log(event.target.result);
 		img.attr("src", event.target.result);
 	});
 	reader.readAsDataURL(file);
-}); 
+});
+
+$("#creerPlatBtn").click(sendNewPLatToServer);
+
+
+function sendNewPLatToServer()
+{
+	var nouveauPlat = {};
+	nouveauPlat.nom = replaceSpecialChar($("#sectionNouveauPlat #nomPlat input").val());
+	nouveauPlat.pict = getImgData64($("#sectionNouveauPlat #platPict img:not(.defaultImg)")[0]).replace(/^data:image\/png;base64,/,"");
+	nouveauPlat.ingredients = [];
+	var ingredients = $("#sectionNouveauPlat #ingredients>div:not(.newInput)>div:not(.puce)");
+	for(var u=0;u<ingredients.length;u++)
+	{
+		nouveauPlat.ingredients[u]=$(ingredients[u]).html();
+	}
+
+	console.log("envoi du nouveau plat !");
+
+	$.ajax({
+	  type: "POST",
+	  url: "/plat",
+	  data: JSON.stringify({newPlat:nouveauPlat}),
+	  contentType: "application/json",
+	  complete : function(){$("#mainQuittButton").click();getListePlats();}
+	});
+};
+
+var getImgData64 = function(img)
+{
+	if(!img)
+		return "";
+	
+	$("html body").append('<canvas id="getImgData64Canvas" style="display:none"></canvas>');
+	
+	var c = document.querySelector('#getImgData64Canvas');
+	c.height = img.naturalHeight;
+	c.width = img.naturalWidth;
+	var ctx = c.getContext('2d');
+
+	ctx.drawImage(img, 0, 0);
+	var base64String = c.toDataURL();
+	$("#getImgData64Canvas").remove();
+	return base64String
+};
+
+replaceSpecialChar = function(str)
+{
+	var accent = [
+		/[\300-\306]/g, /[\340-\346]/g, // A, a
+		/[\310-\313]/g, /[\350-\353]/g, // E, e
+		/[\314-\317]/g, /[\354-\357]/g, // I, i
+		/[\322-\330]/g, /[\362-\370]/g, // O, o
+		/[\331-\334]/g, /[\371-\374]/g, // U, u
+		/[\321]/g, /[\361]/g, // N, n
+		/[\307]/g, /[\347]/g, // C, c
+	];
+	var noaccent = ['A','a','E','e','I','i','O','o','U','u','N','n','C','c'];
+
+	for(var i = 0; i < accent.length; i++){
+		str = str.replace(accent[i], noaccent[i]);
+	}
+
+	return str;
+	
+}
 /* *************** Fin Section nouveau Plats *************** */
 /* ********************************************************* */
 

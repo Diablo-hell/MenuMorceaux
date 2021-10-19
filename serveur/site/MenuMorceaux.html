@@ -31,12 +31,8 @@
 				</div>
 				
 				<div class="zone_boutons ccc">
-					<button id="boutonAjoutPlat" class="ccc">
-						Ajouter un Plats
-					</button>
-					<button id="boutonCourses" class="ccc">
-						Courses
-					</button>
+					<button id="gestionPlats" class="ccc"> Gérer les Plats </button>
+					<button id="boutonCourses" class="ccc">Courses</button>
 				</div>
 			</section>
 			
@@ -49,11 +45,14 @@
 							</th>
 							<th class="nomPlat">
 							</th>
+							<th class="ingredientsPlat">
+							</th>
 						</tr>
 					</table>
 				</div>
 				<div class = "rac">
 					<button id="platsOkButton"> Sélectionner </button>
+					<button id="supprimerPlatButton"> Supprimer le Plat </button>
 					<button id="nouveauPlatButton"> Nouveau Plat </button>
 				</div>
 			</section>
@@ -64,7 +63,7 @@
 				</div>
 				<div id="divNouveauPLat" class="rbt flexFill">
 					<div id="platPict" class = "ccc">
-						<img class="defautImg" src="plats/nouveauPlatDefaut.jpg"/>
+						<img class="defaultImg" src="plats/nouveauPlatDefaut.jpg"/>
 						<input type="file" id="selectPlatPict" accept="image/png, image/jpeg">
 					</div>
 					<div class = "cat flexFill">
@@ -75,7 +74,7 @@
 								<input class="flexFill" placeholder="Ecrivez quelque chose et tapez entrée pour l'ajouter à la liste."/>
 							</div>
 						</div>
-						<div id = "ingrédients">
+						<div id = "ingredients">
 							<div>Ingrédients</div>
 							<div class="newInput rst">
 								<div class="puce">&squf; </div>
@@ -83,6 +82,9 @@
 							</div>
 						</div>
 					</div>
+				</div>
+				<div>
+					<button id="creerPlatBtn"> Créer </button>
 				</div>
 			</section>
 			

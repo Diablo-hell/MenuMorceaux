@@ -95,16 +95,16 @@ app.get('/plats/(.*/)*:imgPlat', function(req, res) {
 // ***** end website picture files ***** //
 // ************************************* //
 
-app.use(express.json({limite:'1mb'}));
+app.use(express.json({limit:'50mb'}));
 // **************************** //
 // ******* POST request ******* //
-app.post('/api', (req, res, next) => {
+app.post('/menu', (req, res, next) => {
 	console.log("POST request! contant les champs :");
 	
 	console.log(req.body);
 	console.log("process.cwd() : " + process.cwd());
 	res.status(201).json({
-		message: 'Objet créé !'
+		message: 'menu modifié !'
 	});
 	
 	for(var year in req.body)
@@ -140,6 +140,82 @@ app.post('/api', (req, res, next) => {
 			console.log(menu);
 			fs.writeFileSync("site/menus/"+year+".json",JSON.stringify(menu,null,4));
 		}
+	}
+});
+
+app.post('/plat', function(req, res, next) {
+	console.log("POST request! plats");
+	res.status(201).json({
+		message: 'plats modifiés !'
+	});
+
+	if(req.body.newPlat)
+	{
+		if(fs.existsSync("site/plats/plats.json"))
+		{
+			var rawData = fs.readFileSync("site/plats/plats.json");
+			var plats = JSON.parse(rawData);
+		}
+		else
+		{
+			plats = {};
+		}
+		
+		
+		var nomPlat = req.body.newPlat.nom;
+		
+		var pictData = req.body.newPlat.pict;
+		
+		var ingredients = req.body.newPlat.ingredients;
+		var idPlat=nomPlat.replace(/\s+/g,"_");
+		
+		// limite l'id et le nom de fichier image à 16 caractères.
+		if(idPlat.length>16)
+			idPlat=idPlat.substr(0,14)+"$";
+		
+		plats[idPlat]={
+			nom:nomPlat,
+			ingredients : ingredients,
+		}
+		
+		if(pictData)
+		{
+			const extension = ".jpg";
+			const buffer = Buffer.from(pictData, "base64");
+			//console.log("buffer : "+buffer);
+			plats[idPlat].pict = idPlat+extension;
+			fs.writeFileSync("site/plats/"+idPlat+extension, buffer,"binary", function(err) {console.log(err);});
+		}		
+		
+		console.log("\n\n plats : \n\n");
+		console.log(plats);
+		fs.writeFileSync("site/plats/plats.json",JSON.stringify(plats,null,4));
+	}
+	if(req.body.deletePlat)
+	{
+		var plats;
+		if(fs.existsSync("site/plats/plats.json"))
+		{
+			var rawData = fs.readFileSync("site/plats/plats.json");
+			var plats = JSON.parse(rawData);
+		}
+		else
+		{
+			plats = {};
+		}
+		
+		
+		var nomPlat = req.body.deletePlat.nom;
+		if(plats[nomPlat])
+		{
+			if(plats[nomPlat].pict)
+				if(fs.existsSync("site/plats/"+plats[nomPlat].pict))
+					fs.unlinkSync("site/plats/"+plats[nomPlat].pict)
+			delete plats[nomPlat];
+		}
+		console.log("\n\n plats : \n\n");
+		console.log(plats);
+		fs.writeFileSync("site/plats/plats.json",JSON.stringify(plats,null,4));
 	}
 });
 // ******* end POST request ******* //
