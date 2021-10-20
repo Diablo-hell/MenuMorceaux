@@ -1,24 +1,13 @@
 /* ********************************************** */
 /* *************** Initialisation *************** */
-var calendrier=[];	
 
-calendrier["01-11-18"] = {};
-
-var modeleSemaine = {};
-modeleSemaine.dateLundi="181030";
-modeleSemaine.repas=[];
-
-calendrier["01-11-18"] = modeleSemaine;	
-console.log("calendrier test : " + calendrier["01-11-18"].dateLundi);
-
-jours = ["Lundi","Mardi","Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+var jours = ["Lundi","Mardi","Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+var mois = ["Janvier","Février","Mars", "Avril", "Mai", "Juin", "Juiller","Aout","Septembre","Octobre","Novembre","Décembre"];
 
 $("#headBar #titreMenu").show();
 $("#headBar #titrePlats").hide();
 $("#headBar #titreCourses").hide();
 $("#headBar #mainQuittButton").hide();
-
-var date="7 Juillet";
 
 var NB_MAX_ELTS_REPAS = 2;
 var firstMenuLoaded = false;
@@ -72,7 +61,7 @@ function getListePlats()
 			
 			if(!firstMenuLoaded)
 			{
-				chargerMenuSemaine(displayedDate);
+				chargerMenuSemaine(displayDate);
 				firstMenuLoaded = true;
 			}
 			
@@ -89,7 +78,7 @@ for(u=0;u<7;u++)
 {
 	$("#TabMenuSemaine").append(''+
 						'<div id="Col' + jours[u] + '" nJour = ' + u + ' class="ccc ColJour">'+
-							'<div class="jour ccc">' + jours[u] + ' </br> ' + date + '</div>'+
+							'<div class="jour ccc"> <span>'+ jours[u] + '</span><span class="dateJour"></span> </div>'+
 							'<div class="ConteneurMidiSoir midi cet">'+
 								'<div class="midiSoir">Midi</div>'+
 								'<div class="repasMidiSoir ccc" nb_elts = 0>'+
@@ -124,10 +113,10 @@ function getWeekNumber(d1) {
     // Calculate full weeks to nearest Thursday
     var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
     // Return array of year and week number
-    return [d.getUTCFullYear(), weekNo];
+    return weekNo;
 };
 
-var  displayedDate = getWeekNumber(new Date());
+var displayDate = new Date();
 
 function viderMenu()
 {
@@ -140,38 +129,49 @@ function viderMenu()
 
 function chargerMenuSemaine(date)
 {
+	
 	$.ajax(
 	{
 		type:"GET",
-		url:"menus/"+date[0]+".json",
+		url:"menus/" + date.getUTCFullYear() + ".json",
 		loadToDate : date,
 		success:function(jsonFileData,successStr)
 		{
-			$("#annee").text(this.loadToDate[0]);
-			$("#numSemaine").text(this.loadToDate[1]);
-			$("#DivMenuSemaine").attr("annee",this.loadToDate[0]);
-			$("#DivMenuSemaine").attr("semaine",this.loadToDate[1]);
-			
-			if(jsonFileData[this.loadToDate[1]] == null)
-				return ;
+			var year = this.loadToDate.getUTCFullYear();
+			var week = getWeekNumber(this.loadToDate);
+			$("#annee").text(year);
+			$("#numSemaine").text(week);
+			$("#DivMenuSemaine").attr("annee",year);
+			$("#DivMenuSemaine").attr("semaine",week);
 			
 			console.log("JSON du menu correctement chargé");
 			viderMenu();
+			$("#TabMenuSemaine .ConteneurMidiSoir .repasMidiSoir").removeAttr("plein").attr("nb_elts",0);
 			for(var u = 0; u<7;u++ )
 			{
 				var day = $("#TabMenuSemaine>div:nth-child("+(u+1)+")");
+				var dayDate = new Date(this.loadToDate.getTime());
+				var dayToday = this.loadToDate.getDay()-1; // normaliser à 0
+				dayDate.setDate(dayDate.getDate()+u-dayToday);
+				day.find(".dateJour").text(dayDate.getDate()+" "+mois[dayDate.getMonth()]);
 				
-				if(jsonFileData[this.loadToDate[1]][u].midi != null)
+				if(typeof(jsonFileData)=="object")
 				{
-					var file_thisDayMidi = jsonFileData[this.loadToDate[1]][u].midi;
-					for(var v=0; v<file_thisDayMidi.length;v++ )
-						ajoutPlatRepas(day.find(".midi .repasMidiSoir>div:first-child()"),file_thisDayMidi[v]);
-				}
-				if(jsonFileData[this.loadToDate[1]][u].soir != null)
-				{
-					var file_thisDaySoir = jsonFileData[this.loadToDate[1]][u].soir;
-					for(var v=0; v<file_thisDaySoir.length;v++ )
-						ajoutPlatRepas(day.find(".soir .repasMidiSoir>div:first-child()"),file_thisDaySoir[v]);
+					if(jsonFileData[week])
+					{
+						if(jsonFileData[week][u].midi != null)
+						{
+							var file_thisDayMidi = jsonFileData[week][u].midi;
+							for(var v=0; v<file_thisDayMidi.length;v++ )
+								ajoutPlatRepas(day.find(".midi .repasMidiSoir>div:first-child()"),file_thisDayMidi[v]);
+						}
+						if(jsonFileData[week][u].soir != null)
+						{
+							var file_thisDaySoir = jsonFileData[week][u].soir;
+							for(var v=0; v<file_thisDaySoir.length;v++ )
+								ajoutPlatRepas(day.find(".soir .repasMidiSoir>div:first-child()"),file_thisDaySoir[v]);
+						}
+					}
 				}
 			}
 			
@@ -338,6 +338,17 @@ function sendMenuToServer()
 	  contentType: "application/json"
 	});
 };
+
+$("#flecheGauche").click(function()
+{
+	displayDate.setDate(displayDate.getDate() -7);
+	chargerMenuSemaine(displayDate);
+});
+$("#flecheDroite").click(function()
+{
+	displayDate.setDate(displayDate.getDate() +7);
+	chargerMenuSemaine(displayDate);
+});
 /* *************** Fin Section Menu *************** */
 /* ************************************************ */
 
